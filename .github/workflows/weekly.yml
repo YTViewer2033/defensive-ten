@@ -1,0 +1,32 @@
+# Weekly refresh: snapshot Monday morning, rebuild, open a PR for human review.
+# Publishing is a human merge, never automatic.
+name: weekly-refresh
+on:
+  schedule:
+    - cron: "0 13 * * 1"   # Mondays 13:00 UTC (9am ET)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: python -m defensive_ten all
+      - name: Open review PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: weekly-refresh
+          commit-message: "weekly snapshot + rebuild"
+          title: "Weekly refresh: review before publish"
+          body: >
+            Automated weekly snapshot and rebuild. Review the rankings, the
+            revised-by-source flags, and the generated article before merging.
+            Merging is the publish step.

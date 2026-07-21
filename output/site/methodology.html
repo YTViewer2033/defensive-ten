@@ -1,0 +1,117 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Methodology — The Defensive Ten</title><style>
+:root { --ink:#1a1f2b; --muted:#5b6472; --line:#e3e6eb; --accent:#0f6b3f;
+        --bg:#fbfbf9; --card:#ffffff; }
+@media (prefers-color-scheme: dark) {
+  :root { --ink:#e8eaf0; --muted:#9aa3b2; --line:#2a3040; --accent:#5dc389;
+          --bg:#12151c; --card:#1a1f2b; } }
+* { box-sizing:border-box; }
+body { margin:0; font:17px/1.6 Georgia, 'Times New Roman', serif;
+       color:var(--ink); background:var(--bg); }
+header { border-bottom:3px solid var(--ink); padding:28px 20px 18px; }
+header .wrap, main { max-width:880px; margin:0 auto; }
+header h1 { font-size:34px; margin:0; letter-spacing:-0.5px; }
+header p { color:var(--muted); margin:6px 0 0; font-style:italic; }
+nav a { color:var(--accent); margin-right:18px; text-decoration:none;
+        font:14px system-ui, sans-serif; }
+main { padding:28px 20px 60px; }
+h2 { font-size:24px; margin-top:44px; border-bottom:1px solid var(--line);
+     padding-bottom:6px; }
+.limitation { border-left:4px solid var(--accent); padding:8px 14px;
+              color:var(--muted); font-size:15px; background:var(--card); }
+.entry { background:var(--card); border:1px solid var(--line); border-radius:8px;
+         padding:18px 22px; margin:18px 0; }
+.entry h3 { margin:0 0 4px; font-size:20px; }
+.entry .meta { font:13px system-ui, sans-serif; color:var(--muted); }
+.statrow { display:flex; flex-wrap:wrap; gap:14px; margin:10px 0;
+           font:13px system-ui, sans-serif; }
+.stat { background:var(--bg); border:1px solid var(--line); border-radius:6px;
+        padding:6px 10px; }
+.stat b { display:block; font-size:16px; }
+table { border-collapse:collapse; width:100%; font:14px system-ui, sans-serif;
+        background:var(--card); }
+th, td { border:1px solid var(--line); padding:7px 10px; text-align:left; }
+th { background:var(--bg); }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+.conf-high { color:var(--accent); } .conf-limited { color:#b0651a; }
+a { color:var(--accent); }
+footer { max-width:880px; margin:0 auto; padding:20px; color:var(--muted);
+         font:13px system-ui, sans-serif; border-top:1px solid var(--line); }
+.overflow { overflow-x:auto; }
+</style></head><body>
+<header><div class="wrap"><h1>The Defensive Ten</h1>
+<p>MLB's best defensive players this week — and the evidence behind every ranking.</p>
+<nav><a href="index.html">This week</a>
+<a href="methodology.html">Methodology &amp; limitations</a>
+<a href="data/rankings.json">Rankings JSON</a>
+<a href="data/graph.json">Evidence graph JSON</a></nav>
+</div></header><main>
+<h2>What this is</h2>
+<p>A weekly, position-aware synthesis of publicly available defensive evidence:
+Baseball Savant's Outs Above Average, Fielding Run Value and its components,
+catcher framing/blocking/throwing, outfielder jump, and arm strength, joined
+with identity data from the MLB Stats API. It is <strong>not</strong> the true
+value of defense, a causal measure of skill, a replacement for OAA or DRS, a
+complete accounting of positioning, or a recreation of Statcast's models.</p>
+
+<h2>Pipeline</h2>
+<ol>
+<li><strong>Snapshot.</strong> Each run stores the raw upstream CSVs unmodified under a dated
+directory with a manifest (URL, UTC retrieval time, SHA-256). Numbers on this site
+trace back to exact source bytes.</li>
+<li><strong>Warehouse.</strong> Snapshots load into DuckDB as one row per
+(player, metric, snapshot date) with full provenance.</li>
+<li><strong>Graph.</strong> Players, teams, positions, metric observations, sources,
+weeks, and rankings become a typed graph (exported as JSON). Every ranking entry
+is reachable from its component observations and their sources.</li>
+<li><strong>Score.</strong> Deterministic Python; same snapshots in, same ranks out.
+No LLM touches any number.</li>
+</ol>
+
+<h2>Scoring formula (defensive-ten-v0.1)</h2>
+<p>Two cohorts, published separately. Combining catcher framing volume with
+infield range would force arbitrary cross-position weights, so we do not.
+Pitchers are excluded in v0.1. All z-scores are computed within primary
+position among qualified players.</p>
+<h3>Non-catchers — season composite</h3>
+<pre>0.50 · z(Fielding Run Value total)
++ 0.30 · z(Outs Above Average)
++ 0.20 · position module
+  infield module  = mean( z(FRV double-play runs), z(FRV arm runs) )
+  outfield module = mean( z(FRV arm runs), z(jump burst vs league) )</pre>
+<h3>Catchers — season composite</h3>
+<pre>0.40 · z(framing runs) + 0.30 · z(blocking runs) + 0.30 · z(throwing runs)</pre>
+<h3>Current Defensive Value</h3>
+<pre>0.50 · season + 0.30 · trailing-30-day delta + 0.20 · trailing-week delta</pre>
+<p>Savant leaderboards are cumulative, so weekly and 30-day form are computed as
+deltas between dated snapshots. When a window has no prior snapshot (including
+the first edition), remaining weights renormalize and the article says so.
+A cumulative metric that moved while a player recorded zero new outs is flagged
+<em>revised-by-source</em>: model recalculation, not new plays.</p>
+
+<h2>Confidence</h2>
+<p>Each player carries an evidence-confidence tier (high / moderate / limited)
+from workload terciles within their cohort — innings for fielders, pitches
+received for catchers. Confidence never changes a score; it tells you how much
+to trust one.</p>
+
+<h2>Known limitations</h2>
+<ul>
+<li>Public leaderboards cannot separate player range from team positioning instructions.</li>
+<li>One week at one position is a small sample; treat weekly movement as descriptive.</li>
+<li>Savant revises models and history; snapshot dates and the revised-by-source flag
+make that visible but cannot undo it.</li>
+<li>First-edition rankings are season-to-date only until prior snapshots accumulate.</li>
+<li>Editorial notes (signature plays, injuries) are annotations, never scoring inputs.</li>
+</ul>
+
+<h2>Terms</h2>
+<p>MLB and Baseball Savant data remain subject to MLB's terms of use. This project
+stores small snapshots for provenance, links back to original sources, and does not
+republish bulk data or use MLB marks.</p>
+</main>
+<footer>Data: Baseball Savant / MLB Statcast leaderboards and the MLB Stats API.
+This site is an independent synthesis of published metrics; it is not affiliated
+with MLB. MLB data is subject to MLB's usage terms. Not a replacement for OAA,
+FRV, or DRS.</footer></body></html>
