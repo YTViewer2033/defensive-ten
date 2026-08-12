@@ -1,0 +1,54 @@
+{
+  "snapshot_date": "2026-08-12",
+  "files": {
+    "oaa": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/outs_above_average?type=Fielder&startYear=2026&endYear=2026&split=no&team=&range=year&min=q&pos=&roles=&viz=hide&csv=true",
+      "description": "Outs Above Average + Fielding Runs Prevented, qualified fielders",
+      "retrieved_at": "2026-08-12T18:50:33.933623+00:00",
+      "sha256": "f637e6285ae38e6265f9eecc24f52c5e46e05c5709082038c1c44bff6193202c",
+      "bytes": 21405
+    },
+    "fielding_run_value": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/fielding-run-value?type=fielder&seasonStart=2026&seasonEnd=2026&minInnings=q&csv=true",
+      "description": "Fielding Run Value with components (range, arm, DP, framing, throwing, blocking)",
+      "retrieved_at": "2026-08-12T18:50:36.925283+00:00",
+      "sha256": "6ae85d462dcc3a63548f0d776e191091ecb5aff254d2e9b3b9ce8d1dcada7151",
+      "bytes": 43788
+    },
+    "catcher_framing": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/catcher-framing?type=catcher&seasonStart=2026&seasonEnd=2026&team=&min=q&sortColumn=rv_tot&sortDirection=desc&csv=true",
+      "description": "Catcher framing run value by attack zone",
+      "retrieved_at": "2026-08-12T18:50:38.903704+00:00",
+      "sha256": "1b9de13404d3759545711e5953a8d1142264a1f5122d428f2e4421620459d3fd",
+      "bytes": 14130
+    },
+    "catcher_blocking": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/catcher-blocking?game_type=Regular&n=q&season_end=2026&season_start=2026&split=no&team=&type=Cat&with_team_only=1&csv=true",
+      "description": "Catcher blocking runs / blocks above average",
+      "retrieved_at": "2026-08-12T18:50:40.618155+00:00",
+      "sha256": "942db27a6e8998ad1acb9c70d0b367e7097176c3b1b8d6a33996e343e8abd9d7",
+      "bytes": 14694
+    },
+    "catcher_throwing": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/catcher-throwing?game_type=Regular&n=q&season_end=2026&season_start=2026&split=no&team=&type=Cat&with_team_only=1&csv=true",
+      "description": "Catcher throwing (stealing runs, CS above average, pop time)",
+      "retrieved_at": "2026-08-12T18:50:42.160877+00:00",
+      "sha256": "437f15b70350d8d254e738187416fa1dc8962fd9220b8b2acfea3345170154b0",
+      "bytes": 23450
+    },
+    "outfield_jump": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/outfield_jump?year=2026&min=q&csv=true",
+      "description": "Outfielder jump (reaction / burst / route, feet vs league)",
+      "retrieved_at": "2026-08-12T18:50:43.542576+00:00",
+      "sha256": "23a20fe3df6305447443a37e9e373efb0806bc1c0d2a00a97c4955bb71b345cc",
+      "bytes": 8111
+    },
+    "arm_strength": {
+      "url": "https://baseballsavant.mlb.com/leaderboard/arm-strength?type=player&year=2026&minThrows=q&pos=&csv=true",
+      "description": "Average/max throw speed by position (context only, not a score input)",
+      "retrieved_at": "2026-08-12T18:50:45.152702+00:00",
+      "sha256": "657ee28ef5c3370bc52de857c23eed30fc986f159cf9051e803c2389b0025704",
+      "bytes": 44875
+    }
+  }
+}

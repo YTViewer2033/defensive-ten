@@ -130,7 +130,10 @@ def compute_scores() -> dict:
     df = _wide(con, latest)
 
     week_delta, week_prior = _window_delta(con, latest, 7, 2)
-    month_delta, month_prior = _window_delta(con, latest, 30, 4)
+    # trailing-30 accepts the nearest snapshot 20-40 days back: early-life
+    # snapshot cadence is irregular, and a 3-week-old baseline is still
+    # recent-form evidence worth more than discarding
+    month_delta, month_prior = _window_delta(con, latest, 30, 10)
 
     cohorts = {}
     for cohort, mask in [

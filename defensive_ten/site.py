@@ -205,8 +205,10 @@ position among qualified players.</p>
 <h3>Current Defensive Value</h3>
 <pre>0.50 · season + 0.30 · trailing-30-day delta + 0.20 · trailing-week delta</pre>
 <p>Savant leaderboards are cumulative, so weekly and 30-day form are computed as
-deltas between dated snapshots. When a window has no prior snapshot (including
-the first edition), remaining weights renormalize and the article says so.
+deltas between dated snapshots — the week window uses the nearest snapshot
+5&ndash;9 days back, the trailing-30 window the nearest 20&ndash;40 days back.
+When a window has no prior snapshot (including the first edition), remaining
+weights renormalize and the article says so.
 A cumulative metric that moved while a player recorded zero new outs is flagged
 <em>revised-by-source</em>: model recalculation, not new plays.</p>
 
